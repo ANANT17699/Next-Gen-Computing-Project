@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — E-Blood Bank</title>
+  <meta name="description" content="Get in touch with E-Blood Bank for support, partnerships, or emergency assistance." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
+  <style>
+    /* FAQ Accordion */
+    .faq-item {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color var(--transition-base);
+    }
+    .faq-item:hover { border-color: var(--color-primary); }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: var(--color-surface);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      border: none;
+      text-align: left;
+      transition: background var(--transition-base);
+      gap: 1rem;
+    }
+    .faq-question:hover { background: var(--color-surface-alt); }
+
+    .faq-arrow {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      transition: transform var(--transition-base);
+      flex-shrink: 0;
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--color-primary); }
+    .faq-item.open .faq-question { color: var(--color-primary); background: var(--color-primary-light); }
+
+    .faq-answer {
+      display: none;
+      padding: 0 1.25rem 1rem;
+      font-size: 0.88rem;
+      color: var(--color-text-secondary);
+      line-height: 1.75;
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+    }
+    .faq-item.open .faq-answer { display: block; }
+
+    /* Social buttons */
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      transform: translateY(-1px);
+    }
+
+    /* Office hours indicator */
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.85rem;
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-day   { color: var(--color-text-secondary); }
+    .hours-time  { font-weight: 500; color: var(--color-text-primary); }
+    .hours-closed { color: var(--color-text-muted); font-style: italic; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVBAR (Internal)
+══════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar-inner">
+
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <button class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="index.html" class="navbar-logo">
+        <div class="navbar-logo-icon">🩸</div>
+        <div class="navbar-logo-text">
+          E-Blood Bank
+          <span>Management System</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="navbar-actions">
+      <button class="btn-icon" data-tooltip="Notifications" aria-label="Notifications" style="position:relative;">
+        🔔
+        <span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--color-primary);border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">3</span>
+      </button>
+      <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Toggle theme">🌙</button>
+      <div class="avatar avatar-md" style="cursor:pointer;" data-tooltip="John Doe">JD</div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     APP LAYOUT
+══════════════════════════════════ -->
+<div class="app-layout">
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" role="navigation" aria-label="Sidebar navigation">
+    <div class="sidebar-header">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">JD</div>
+        <div>
+          <div class="sidebar-user-name">John Doe</div>
+          <div class="sidebar-user-role">Blood Donor · A+</div>
+        </div>
+      </div>
+      <button class="sidebar-close" aria-label="Close sidebar">✕</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-title">Main</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <span class="sidebar-link-icon">📊</span>Dashboard
+      </a>
+      <a href="index.html" class="sidebar-link">
+        <span class="sidebar-link-icon">🏠</span>Home
+      </a>
+
+      <div class="sidebar-section-title">Blood Services</div>
+      <a href="request-blood.html" class="sidebar-link">
+        <span class="sidebar-link-icon">🩸</span>
+        Request Blood
+        <span class="sidebar-link-badge">2</span>
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">💉</span>My Donations
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">📋</span>My Requests
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">🔍</span>Find Donors
+      </a>
+
+      <div class="sidebar-section-title">Account</div>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">👤</span>My Profile
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">⚙️</span>Settings
+      </a>
+      <a href="contact.html" class="sidebar-link active">
+        <span class="sidebar-link-icon">📬</span>Support
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="login.html" class="sidebar-link">
+        <span class="sidebar-link-icon">🚪</span>Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+
+    <!-- Page Header -->
+    <div class="page-header animate-fade-in-up">
+      <div>
+        <h1 class="page-title">📬 Contact & Support</h1>
+        <p class="page-subtitle">Reach out for help, partnerships, or emergency assistance. We're here 24/7.</p>
+      </div>
+      <a href="dashboard.html" class="btn btn-ghost btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <!-- Emergency Alert Strip -->
+    <div style="background:linear-gradient(135deg,var(--red-700),var(--red-900));border-radius:var(--radius-lg);padding:1rem 1.5rem;margin-bottom:1.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;"
+      class="animate-fade-in-up delay-1">
+      <div style="display:flex;align-items:center;gap:0.85rem;">
+        <span style="font-size:1.5rem;">🚨</span>
+        <div>
+          <div style="font-weight:700;color:#fff;font-family:var(--font-display);">Blood Emergency?</div>
+          <div style="font-size:0.82rem;color:rgba(255,255,255,.8);">Call our 24/7 hotline immediately for critical blood requests.</div>
+        </div>
+      </div>
+      <a href="tel:+911800000000"
+        style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);border-radius:var(--radius-md);padding:0.6rem 1.5rem;font-weight:600;font-size:0.9rem;white-space:nowrap;transition:background .2s;"
+        onmouseover="this.style.background='rgba(255,255,255,.3)'"
+        onmouseout="this.style.background='rgba(255,255,255,.2)'">
+        ☎️ 1800-XXX-XXXX
+      </a>
+    </div>
+
+    <!-- Contact Grid -->
+    <div class="contact-grid animate-fade-in-up delay-2">
+
+      <!-- Left: Info Cards -->
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <!-- Contact Info -->
+        <div class="contact-info-card">
+          <h3 style="font-size:1rem;font-weight:600;margin-bottom:0.25rem;">Get in Touch</h3>
+          <p style="font-size:0.82rem;color:var(--color-text-muted);margin-bottom:0.5rem;">
+            Multiple ways to reach our support team.
+          </p>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">☎️</div>
+            <div>
+              <div class="contact-item-label">Helpline</div>
+              <div class="contact-item-value">1800-XXX-XXXX (Toll Free)</div>
+              <div style="font-size:0.75rem;color:var(--color-text-muted);margin-top:2px;">Mon–Sat · 9 AM – 8 PM</div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">🚨</div>
+            <div>
+              <div class="contact-item-label">Emergency Line</div>
+              <div class="contact-item-value">+91 98765 00000</div>
+              <div style="font-size:0.75rem;color:var(--color-success);margin-top:2px;">🟢 Available 24/7</div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">✉️</div>
+            <div>
+              <div class="contact-item-label">General Enquiries</div>
+              <div class="contact-item-value">support@ebloodbank.in</div>
+              <div style="font-size:0.75rem;color:var(--color-text-muted);margin-top:2px;">Response within 24 hours</div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">🚨</div>
+            <div>
+              <div class="contact-item-label">Emergency Email</div>
+              <div class="contact-item-value">emergency@ebloodbank.in</div>
+              <div style="font-size:0.75rem;color:var(--color-success);margin-top:2px;">Monitored 24/7</div>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">📍</div>
+            <div>
+              <div class="contact-item-label">Head Office</div>
+              <div class="contact-item-value">12, Healthcare Avenue, Sector 18,<br/>New Delhi – 110001, India</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Office Hours -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">🕐 Office Hours</h3>
+            <span class="badge badge-green">🟢 Open Now</span>
+          </div>
+          <div>
+            <div class="hours-row">
+              <span class="hours-day">Monday – Friday</span>
+              <span class="hours-time">9:00 AM – 8:00 PM</span>
+            </div>
+            <div class="hours-row">
+              <span class="hours-day">Saturday</span>
+              <span class="hours-time">10:00 AM – 6:00 PM</span>
+            </div>
+            <div class="hours-row">
+              <span class="hours-day">Sunday</span>
+              <span class="hours-closed">Closed (Emergency line active)</span>
+            </div>
+            <div style="margin-top:0.85rem;padding:0.75rem;background:var(--color-primary-light);border-radius:var(--radius-md);font-size:0.8rem;color:var(--color-primary);font-weight:500;">
+              🚨 Emergency line & email are monitored 24/7 regardless of office hours.
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:1rem;">Follow Us</h3>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <a href="#" class="social-btn">
+              <span>📘</span> Facebook — /EBloodBankIndia
+            </a>
+            <a href="#" class="social-btn">
+              <span>🐦</span> Twitter / X — @EBloodBank
+            </a>
+            <a href="#" class="social-btn">
+              <span>📸</span> Instagram — @ebloodbank.in
+            </a>
+            <a href="#" class="social-btn">
+              <span>💼</span> LinkedIn — E-Blood Bank
+            </a>
+          </div>
+        </div>
+
+        <!-- Map Placeholder -->
+        <div class="map-placeholder">
+          <span style="font-size:2rem;opacity:0.4;">🗺️</span>
+          <span>Interactive Map — Google Maps integration</span>
+          <span style="font-size:0.75rem;">Will be embedded after backend setup</span>
+        </div>
+
+      </div>
+
+      <!-- Right: Contact Form + FAQ -->
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <!-- Contact Form -->
+        <div class="contact-form-card animate-fade-in-up delay-3">
+          <h3 style="font-size:1.05rem;font-weight:600;margin-bottom:0.25rem;">Send us a Message</h3>
+          <p style="font-size:0.82rem;color:var(--color-text-muted);margin-bottom:1.5rem;">
+            Fill in the form and we'll get back to you within 24 hours.
+          </p>
+
+          <form id="contact-form" novalidate data-on-valid="handleContactSubmit">
+
+            <div class="form-grid form-grid-2" style="margin-bottom:1.25rem;">
+
+              <div class="form-group">
+                <label class="form-label" for="c-name">Full Name <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="c-name" name="name" class="form-control"
+                    placeholder="Your full name"
+                    data-validate="required minLength:2" />
+                </div>
+                <span class="form-error"></span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="c-email">Email Address <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-icon">✉️</span>
+                  <input type="email" id="c-email" name="email" class="form-control"
+                    placeholder="you@example.com"
+                    data-validate="required email" />
+                </div>
+                <span class="form-error"></span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="c-phone">Phone Number</label>
+                <div class="input-group">
+                  <span class="input-icon">📞</span>
+                  <input type="tel" id="c-phone" name="phone" class="form-control"
+                    placeholder="+91 98765 43210" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="c-subject">Subject <span class="required">*</span></label>
+                <select id="c-subject" name="subject" class="form-control" data-validate="required">
+                  <option value="">Select a topic</option>
+                  <option value="general">General Enquiry</option>
+                  <option value="donation">Donation Help</option>
+                  <option value="request">Blood Request Help</option>
+                  <option value="account">Account / Login Issue</option>
+                  <option value="technical">Technical Support</option>
+                  <option value="partnership">Hospital Partnership</option>
+                  <option value="feedback">Feedback / Suggestion</option>
+                  <option value="emergency">Emergency Assistance</option>
+                </select>
+                <span class="form-error"></span>
+              </div>
+
+            </div>
+
+            <div class="form-group" style="margin-bottom:1.25rem;">
+              <label class="form-label" for="c-message">Your Message <span class="required">*</span></label>
+              <textarea id="c-message" name="message" class="form-control"
+                rows="5" placeholder="Please describe your issue or question in detail…"
+                style="resize:vertical;"
+                data-validate="required minLength:20"></textarea>
+              <span class="form-error"></span>
+              <span class="form-hint">Minimum 20 characters. Be as specific as possible for faster help.</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom:1.25rem;">
+              <label class="form-check">
+                <input type="checkbox" name="newsletter" />
+                <span class="form-check-label">Subscribe to our newsletter for blood availability updates and health tips.</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              📨 Send Message
+            </button>
+
+          </form>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="card animate-fade-in-up delay-4">
+          <div class="card-header">
+            <h3 class="card-title">❓ Frequently Asked Questions</h3>
+            <span class="badge badge-gray">6 FAQs</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:0.6rem;" id="faq-list">
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                Who can donate blood?
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer">
+                Anyone aged 18–65, weighing at least 45 kg, in good general health, and free of transmissible
+                blood-borne diseases can donate. You must also not have donated blood in the past 90 days
+                (whole blood). Medical staff will confirm eligibility before the donation.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                How long does it take to find a matching donor?
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer">
+                For Critical priority requests, our system alerts all nearby verified donors instantly —
+                typical match time is 30–90 minutes. Urgent requests are matched within 2–6 hours.
+                Scheduled requests are matched 1–3 days in advance.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                Is my personal and medical data safe?
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer">
+                Absolutely. All data is encrypted at rest and in transit using industry-standard protocols.
+                Your information is never shared with third parties without explicit consent.
+                Medical data is only visible to verified hospital staff involved in your request.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                Can I cancel or edit a blood request?
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer">
+                Yes. You can cancel or edit any Pending or Searching request from your dashboard under
+                "My Requests". Once a request is marked Fulfilled or a donor has been dispatched,
+                cancellation requires calling our support line.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                How do I become a verified donor?
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer">
+                Register on the platform, complete your medical information, and tick the eligibility
+                checklist honestly. Our admin team will review your profile within 24 hours.
+                Once approved, you'll receive a confirmation email and be visible to requesters.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                Does E-Blood Bank charge any fees?
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer">
+                No. Registration and all platform features are completely free for donors and requesters.
+                E-Blood Bank is a non-profit initiative. Any optional donations to support platform costs
+                are voluntary and clearly marked.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Partner Hospitals Strip -->
+    <div class="card animate-fade-in-up delay-5" style="margin-top:1.75rem;">
+      <div class="card-header">
+        <h3 class="card-title">🏥 Partner Hospitals</h3>
+        <span class="badge badge-gray">47 Partners</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;">
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;transition:all .2s;" class="card-hover">
+          🏥 AIIMS, New Delhi
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;" class="card-hover">
+          🏥 Fortis, Gurgaon
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;" class="card-hover">
+          🏥 Max Hospital, Noida
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;" class="card-hover">
+          🏥 Safdarjung, Delhi
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;" class="card-hover">
+          🏥 Apollo, Chennai
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;" class="card-hover">
+          🏥 Kokilaben, Mumbai
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;gap:0.5rem;" class="card-hover">
+          🏥 Manipal, Bangalore
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--color-primary-light);border:1px dashed var(--color-primary);border-radius:var(--radius-md);font-size:0.82rem;font-weight:500;color:var(--color-primary);display:flex;align-items:center;gap:0.5rem;cursor:pointer;"
+          onclick="showToast('Partnership enquiry form opening…','info')">
+          ➕ Apply for Partnership
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/script.js"></script>
+<script>
+  // FAQ Accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+      document.querySelectorAll('.faq-question').forEach(el => el.setAttribute('aria-expanded', 'false'));
+
+      // Toggle clicked
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+</body>
+</html>

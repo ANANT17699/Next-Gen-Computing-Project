@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Requester Registration — E-Blood Bank</title>
+  <meta name="description" content="Register as a blood requester with E-Blood Bank." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar-inner">
+    <a href="signup.html" class="navbar-logo" aria-label="E-Blood Bank — back to role selection">
+      <div class="navbar-logo-icon">🩸</div>
+      <div class="navbar-logo-text">
+        E-Blood Bank
+        <span>Management System</span>
+      </div>
+    </a>
+    <div class="navbar-actions">
+      <span class="badge badge-blue">Requester Registration</span>
+      <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<main class="register-page">
+  <div class="container">
+
+    <!-- Header -->
+    <header class="register-header animate-fade-in-up">
+      <span class="badge badge-blue" style="margin-bottom:1rem;">🏥 Requester</span>
+      <h1>Requester Registration</h1>
+      <p style="max-width:500px;margin:0.75rem auto 0; font-size:0.95rem; color:var(--color-text-secondary);">
+        Register to request blood for yourself or a patient.
+        Your data is kept strictly confidential.
+      </p>
+    </header>
+
+    <!-- Progress -->
+    <div class="register-progress animate-fade-in delay-1">
+      <div class="progress-step active">
+        <div class="progress-dot">1</div>
+        <div class="progress-label">Personal Info</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-dot">2</div>
+        <div class="progress-label">Patient Details</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-dot">3</div>
+        <div class="progress-label">Account Setup</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-dot">✓</div>
+        <div class="progress-label">Confirm</div>
+      </div>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="register-card animate-fade-in delay-2">
+      <form id="register-requester-form" novalidate data-on-valid="handleRegisterSubmit">
+
+        <!-- ─── STEP 1: Personal Info ─── -->
+        <div class="form-step">
+          <div class="form-section-title">👤 Your Personal Information</div>
+
+          <div class="form-grid form-grid-2">
+
+            <div class="form-group">
+              <label class="form-label" for="r-first-name">First Name <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="r-first-name" name="first_name" class="form-control"
+                  placeholder="Jane" autocomplete="given-name"
+                  data-validate="required minLength:2" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-last-name">Last Name <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="r-last-name" name="last_name" class="form-control"
+                  placeholder="Smith" autocomplete="family-name"
+                  data-validate="required minLength:2" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-phone">Phone Number <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">📞</span>
+                <input type="tel" id="r-phone" name="phone" class="form-control"
+                  placeholder="+91 98765 43210" autocomplete="tel"
+                  data-validate="required phone" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-relation">Relation to Patient <span class="required">*</span></label>
+              <select id="r-relation" name="relation" class="form-control" data-validate="required">
+                <option value="">Select relation</option>
+                <option value="self">Self</option>
+                <option value="family">Family Member</option>
+                <option value="friend">Friend</option>
+                <option value="colleague">Colleague</option>
+                <option value="hospital">Hospital / Medical Staff</option>
+                <option value="other">Other</option>
+              </select>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label" for="r-city">City / Location <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">📍</span>
+                <input type="text" id="r-city" name="city" class="form-control"
+                  placeholder="City where blood is needed"
+                  data-validate="required" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+          </div>
+
+          <div class="flex" style="justify-content:flex-end; margin-top:1.75rem;">
+            <button type="button" class="btn btn-primary step-next">Continue to Patient Details →</button>
+          </div>
+        </div>
+
+        <!-- ─── STEP 2: Patient Details ─── -->
+        <div class="form-step hidden">
+          <div class="form-section-title">🏥 Patient Details</div>
+
+          <div class="form-grid form-grid-2">
+
+            <div class="form-group">
+              <label class="form-label" for="r-patient-name">Patient Full Name <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🤒</span>
+                <input type="text" id="r-patient-name" name="patient_name" class="form-control"
+                  placeholder="Patient's full name"
+                  data-validate="required minLength:2" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-patient-age">Patient Age <span class="required">*</span></label>
+              <input type="number" id="r-patient-age" name="patient_age" class="form-control"
+                placeholder="35" min="0" max="120"
+                data-validate="required" />
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-blood-type">Required Blood Group <span class="required">*</span></label>
+              <select id="r-blood-type" name="blood_type_needed" class="form-control" data-validate="required">
+                <option value="">Select blood group</option>
+                <option>A+</option><option>A−</option>
+                <option>B+</option><option>B−</option>
+                <option>AB+</option><option>AB−</option>
+                <option>O+</option><option>O−</option>
+                <option value="unknown">Not Sure / To be confirmed</option>
+              </select>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-units">Units Required <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🩸</span>
+                <input type="number" id="r-units" name="units_required" class="form-control"
+                  placeholder="1" min="1" max="20"
+                  data-validate="required" />
+              </div>
+              <span class="form-hint">1 unit = approximately 450 ml</span>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label" for="r-hospital">Hospital Name & Address <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🏥</span>
+                <input type="text" id="r-hospital" name="hospital" class="form-control"
+                  placeholder="Hospital name and full address"
+                  data-validate="required" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label" for="r-medical-condition">Medical Condition / Reason</label>
+              <textarea id="r-medical-condition" name="medical_condition" class="form-control"
+                rows="3" placeholder="Brief description of why blood is needed (surgery, accident, disease, etc.)"
+                style="resize:vertical;"></textarea>
+              <span class="form-hint">Optional, but helps with priority assessment.</span>
+            </div>
+
+          </div>
+
+          <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
+            <button type="button" class="btn btn-ghost step-prev">← Back</button>
+            <button type="button" class="btn btn-primary step-next">Continue to Account Setup →</button>
+          </div>
+        </div>
+
+        <!-- ─── STEP 3: Account Setup ─── -->
+        <div class="form-step hidden">
+          <div class="form-section-title">🔐 Account Setup</div>
+
+          <div class="form-grid form-grid-2">
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label" for="r-email">Email Address <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">✉️</span>
+                <input type="email" id="r-email" name="email" class="form-control"
+                  placeholder="you@example.com" autocomplete="email"
+                  data-validate="required email" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-password">Password <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="r-password" name="password" class="form-control"
+                  placeholder="Create a strong password"
+                  data-validate="required password" />
+                <button type="button" class="input-action" data-toggle-password="#r-password">👁️</button>
+              </div>
+              <span class="form-hint">Min 8 chars with uppercase, lowercase & number.</span>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="r-confirm-password">Confirm Password <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="r-confirm-password" name="confirm_password" class="form-control"
+                  placeholder="Repeat your password"
+                  data-validate="required match:#r-password" />
+                <button type="button" class="input-action" data-toggle-password="#r-confirm-password">👁️</button>
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+          </div>
+
+          <div class="form-group mt-3">
+            <label class="form-check">
+              <input type="checkbox" name="notify_match" checked />
+              <span class="form-check-label">Notify me when a matching donor is found near my location.</span>
+            </label>
+          </div>
+
+          <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
+            <button type="button" class="btn btn-ghost step-prev">← Back</button>
+            <button type="button" class="btn btn-primary step-next">Review & Confirm →</button>
+          </div>
+        </div>
+
+        <!-- ─── STEP 4: Confirm ─── -->
+        <div class="form-step hidden">
+          <div class="form-section-title">🎉 Almost There!</div>
+
+          <div class="alert alert-info" style="margin-bottom:1.5rem;">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+              Please review your information. Once submitted, our team will process
+              your request and notify you of matching donors within 2 hours.
+            </div>
+          </div>
+
+          <div class="form-section" style="margin-bottom:1.5rem;">
+            <div class="form-section-title">📋 Registration Summary</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-size:0.88rem;">
+              <div>
+                <span style="color:var(--color-text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Role</span>
+                <div style="font-weight:500;margin-top:2px;">Blood Requester 🏥</div>
+              </div>
+              <div>
+                <span style="color:var(--color-text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Status</span>
+                <div><span class="badge badge-amber">Pending Verification</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-check">
+              <input type="checkbox" name="terms" data-validate="required" />
+              <span class="form-check-label">
+                I agree to the <a href="#" style="color:var(--color-primary);">Terms of Service</a>
+                and <a href="#" style="color:var(--color-primary);">Privacy Policy</a> of E-Blood Bank.
+              </span>
+            </label>
+            <span class="form-error"></span>
+          </div>
+
+          <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
+            <button type="button" class="btn btn-ghost step-prev">← Edit Information</button>
+            <button type="submit" class="btn btn-primary btn-lg">
+              🏥 Submit Registration
+            </button>
+          </div>
+
+          <p class="text-center mt-3" style="font-size:0.82rem; color:var(--color-text-muted);">
+            Already registered? <a href="login.html" style="color:var(--color-primary);">Sign in →</a>
+          </p>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/script.js"></script>
+</body>
+</html>
