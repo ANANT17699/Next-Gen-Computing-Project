@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — E-Blood Bank</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
+  <style>
+    /* Tab component */
+    .tab-group { }
+    .tab-bar {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: none;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      white-space: nowrap;
+      font-family: var(--font-display);
+    }
+    .tab-btn:hover { color: var(--color-primary); background: var(--color-primary-light); }
+    .tab-btn.active {
+      color: var(--color-primary);
+      background: var(--color-surface);
+      border-color: var(--color-border);
+      border-bottom-color: var(--color-surface);
+      margin-bottom: -1px;
+    }
+    /* Mini chart bars */
+    .mini-bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 48px;
+    }
+    .mini-bar {
+      flex: 1;
+      background: var(--color-primary-light);
+      border-radius: 3px 3px 0 0;
+      transition: background var(--transition-base);
+      min-width: 6px;
+    }
+    .mini-bar:hover { background: var(--color-primary); }
+    /* Activity feed */
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .activity-title { font-size: 0.88rem; font-weight: 500; color: var(--color-text-primary); }
+    .activity-meta  { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 2px; }
+    /* Request row */
+    .request-row td:first-child { font-weight: 600; font-family: var(--font-display); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVBAR (Internal)
+══════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar-inner">
+
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <!-- Sidebar Toggle -->
+      <button class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+
+      <a href="index.html" class="navbar-logo" aria-label="E-Blood Bank Home">
+        <div class="navbar-logo-icon">🩸</div>
+        <div class="navbar-logo-text">
+          E-Blood Bank
+          <span>Management System</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="navbar-actions">
+      <button class="btn-icon" data-tooltip="Notifications" aria-label="Notifications">
+        🔔
+        <span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--color-primary);border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">3</span>
+      </button>
+      <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Toggle theme">🌙</button>
+      <div class="avatar avatar-md" style="cursor:pointer;" data-tooltip="John Doe — Donor">JD</div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     APP LAYOUT
+══════════════════════════════════ -->
+<div class="app-layout">
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" role="navigation" aria-label="Sidebar navigation">
+
+    <div class="sidebar-header">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">JD</div>
+        <div>
+          <div class="sidebar-user-name">John Doe</div>
+          <div class="sidebar-user-role">Blood Donor · A+</div>
+        </div>
+      </div>
+      <button class="sidebar-close" aria-label="Close sidebar">✕</button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Dashboard navigation">
+
+      <div class="sidebar-section-title">Main</div>
+      <a href="dashboard.html" class="sidebar-link active">
+        <span class="sidebar-link-icon">📊</span>
+        Dashboard
+      </a>
+      <a href="index.html" class="sidebar-link">
+        <span class="sidebar-link-icon">🏠</span>
+        Home
+      </a>
+
+      <div class="sidebar-section-title">Blood Services</div>
+      <a href="request-blood.html" class="sidebar-link">
+        <span class="sidebar-link-icon">🩸</span>
+        Request Blood
+        <span class="sidebar-link-badge">2</span>
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">💉</span>
+        My Donations
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">📋</span>
+        My Requests
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">🔍</span>
+        Find Donors
+      </a>
+
+      <div class="sidebar-section-title">Account</div>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">👤</span>
+        My Profile
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-link-icon">⚙️</span>
+        Settings
+      </a>
+      <a href="contact.html" class="sidebar-link">
+        <span class="sidebar-link-icon">📬</span>
+        Support
+      </a>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="login.html" class="sidebar-link">
+        <span class="sidebar-link-icon">🚪</span>
+        Sign Out
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+
+    <!-- Page Header -->
+    <div class="page-header animate-fade-in-up">
+      <div>
+        <h1 class="page-title">Good morning, John 👋</h1>
+        <p class="page-subtitle">Here's your blood bank overview for today — April 8, 2025</p>
+      </div>
+      <div class="flex gap-2">
+        <a href="request-blood.html" class="btn btn-primary btn-sm">
+          🩸 New Request
+        </a>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Refreshing data…','info')">
+          🔄 Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Alert Banner -->
+    <div class="alert alert-danger animate-fade-in-up delay-1" style="margin-bottom:1.5rem;">
+      <span class="alert-icon">🚨</span>
+      <div>
+        <strong>Urgent Alert:</strong> AB− blood is critically low (4 units remaining).
+        Eligible donors near Delhi are requested to donate immediately.
+        <a href="request-blood.html" style="color:var(--color-danger);font-weight:600;margin-left:0.5rem;">
+          View Details →
+        </a>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="grid grid-4 animate-fade-in-up delay-2" style="margin-bottom:1.75rem;">
+
+      <div class="stat-card">
+        <div class="stat-card-icon red">🩸</div>
+        <div class="stat-card-value" data-counter="12">0</div>
+        <div class="stat-card-label">Total Donations</div>
+        <div class="stat-card-trend trend-up">↑ +2 this month</div>
+      </div>
+
+      <div class="stat-card accent-success">
+        <div class="stat-card-icon green">❤️</div>
+        <div class="stat-card-value" data-counter="36">0</div>
+        <div class="stat-card-label">Lives Saved</div>
+        <div class="stat-card-trend trend-up">↑ 3× donation impact</div>
+      </div>
+
+      <div class="stat-card accent-warning">
+        <div class="stat-card-icon amber">⏳</div>
+        <div class="stat-card-value">47</div>
+        <div class="stat-card-label">Days Since Last Donation</div>
+        <div class="stat-card-trend trend-down">Eligible again in 43 days</div>
+      </div>
+
+      <div class="stat-card accent-info">
+        <div class="stat-card-icon blue">📋</div>
+        <div class="stat-card-value" data-counter="3">0</div>
+        <div class="stat-card-label">Active Requests Near You</div>
+        <div class="stat-card-trend trend-up">↑ 1 new today</div>
+      </div>
+
+    </div>
+
+    <!-- Two-column: Requests + Activity -->
+    <div class="grid grid-2 animate-fade-in-up delay-3" style="margin-bottom:1.75rem; align-items:start;">
+
+      <!-- Recent Blood Requests -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">📋 Recent Blood Requests</h3>
+          <a href="request-blood.html" class="btn btn-outline btn-sm">View All</a>
+        </div>
+
+        <div class="tab-group">
+          <div class="tab-bar">
+            <button class="tab-btn" data-tab="all">All</button>
+            <button class="tab-btn" data-tab="pending">Pending</button>
+            <button class="tab-btn" data-tab="fulfilled">Fulfilled</button>
+            <button class="tab-btn" data-tab="cancelled">Cancelled</button>
+          </div>
+
+          <div class="tab-panel" data-tab="all">
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Blood Type</th>
+                    <th>Patient</th>
+                    <th>Units</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="request-row">
+                    <td><span class="blood-type-tag" style="width:36px;height:36px;font-size:0.75rem;">AB−</span></td>
+                    <td>
+                      <div style="font-weight:500;font-size:0.85rem;">Priya Sharma</div>
+                      <div style="font-size:0.75rem;color:var(--color-text-muted);">City Hospital, Delhi</div>
+                    </td>
+                    <td>2 units</td>
+                    <td><span class="badge badge-amber">Pending</span></td>
+                  </tr>
+                  <tr class="request-row">
+                    <td><span class="blood-type-tag" style="width:36px;height:36px;font-size:0.75rem;">O+</span></td>
+                    <td>
+                      <div style="font-weight:500;font-size:0.85rem;">Rahul Verma</div>
+                      <div style="font-size:0.75rem;color:var(--color-text-muted);">AIIMS, New Delhi</div>
+                    </td>
+                    <td>1 unit</td>
+                    <td><span class="badge badge-green">Fulfilled ✓</span></td>
+                  </tr>
+                  <tr class="request-row">
+                    <td><span class="blood-type-tag" style="width:36px;height:36px;font-size:0.75rem;">B+</span></td>
+                    <td>
+                      <div style="font-weight:500;font-size:0.85rem;">Anjali Mehta</div>
+                      <div style="font-size:0.75rem;color:var(--color-text-muted);">Fortis, Gurgaon</div>
+                    </td>
+                    <td>3 units</td>
+                    <td><span class="badge badge-red">Urgent 🚨</span></td>
+                  </tr>
+                  <tr class="request-row">
+                    <td><span class="blood-type-tag" style="width:36px;height:36px;font-size:0.75rem;">A−</span></td>
+                    <td>
+                      <div style="font-weight:500;font-size:0.85rem;">Deepak Kumar</div>
+                      <div style="font-size:0.75rem;color:var(--color-text-muted);">Max Hospital, Noida</div>
+                    </td>
+                    <td>2 units</td>
+                    <td><span class="badge badge-gray">Cancelled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-panel hidden" data-tab="pending">
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>Blood Type</th><th>Patient</th><th>Units</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr class="request-row">
+                    <td><span class="blood-type-tag" style="width:36px;height:36px;font-size:0.75rem;">AB−</span></td>
+                    <td>
+                      <div style="font-weight:500;font-size:0.85rem;">Priya Sharma</div>
+                      <div style="font-size:0.75rem;color:var(--color-text-muted);">City Hospital, Delhi</div>
+                    </td>
+                    <td>2 units</td>
+                    <td><span class="badge badge-amber">Pending</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-panel hidden" data-tab="fulfilled">
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>Blood Type</th><th>Patient</th><th>Units</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr class="request-row">
+                    <td><span class="blood-type-tag" style="width:36px;height:36px;font-size:0.75rem;">O+</span></td>
+                    <td>
+                      <div style="font-weight:500;font-size:0.85rem;">Rahul Verma</div>
+                      <div style="font-size:0.75rem;color:var(--color-text-muted);">AIIMS, New Delhi</div>
+                    </td>
+                    <td>1 unit</td>
+                    <td><span class="badge badge-green">Fulfilled ✓</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-panel hidden" data-tab="cancelled">
+            <div class="empty-state">
+              <div class="empty-state-icon">📭</div>
+              <div class="empty-state-text">No cancelled requests.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Feed -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">🕐 Recent Activity</h3>
+          <span class="badge badge-gray">Today</span>
+        </div>
+
+        <div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--color-success-light);">✅</div>
+            <div>
+              <div class="activity-title">Donation confirmed</div>
+              <div class="activity-meta">You donated 1 unit of A+ blood at AIIMS, Delhi · 2 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--color-danger-light);">🚨</div>
+            <div>
+              <div class="activity-title">Emergency alert received</div>
+              <div class="activity-meta">AB− critically needed at City Hospital, Delhi · 4 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--color-info-light);">📋</div>
+            <div>
+              <div class="activity-title">New blood request nearby</div>
+              <div class="activity-meta">B+ needed urgently at Fortis, Gurgaon · 5 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--color-warning-light);">⏳</div>
+            <div>
+              <div class="activity-title">Profile update reminder</div>
+              <div class="activity-meta">Please update your last donation date · Yesterday</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--color-primary-light);">🏅</div>
+            <div>
+              <div class="activity-title">Badge earned: Regular Donor</div>
+              <div class="activity-meta">You've donated 10+ times! · 3 days ago</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Blood Stock Overview -->
+    <div class="card animate-fade-in-up delay-4" style="margin-bottom:1.75rem;">
+      <div class="card-header">
+        <h3 class="card-title">🩸 Current Blood Stock Overview</h3>
+        <span class="badge badge-green">🟢 Live Data</span>
+      </div>
+
+      <div class="grid grid-4" style="gap:1rem;">
+
+        <div style="background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;text-align:center;">
+          <div class="blood-type-tag" style="margin:0 auto 0.75rem;">A+</div>
+          <div class="mini-bar-chart" style="margin-bottom:0.5rem;">
+            <div class="mini-bar" style="height:80%;"></div>
+            <div class="mini-bar" style="height:65%;"></div>
+            <div class="mini-bar" style="height:90%;"></div>
+            <div class="mini-bar" style="height:75%;"></div>
+            <div class="mini-bar" style="height:95%;"></div>
+          </div>
+          <div style="font-size:1.2rem;font-weight:700;font-family:var(--font-display);color:var(--color-text-primary);">142</div>
+          <div style="font-size:0.72rem;color:var(--color-text-muted);">units</div>
+          <span class="badge badge-green" style="margin-top:0.5rem;font-size:0.7rem;">Good</span>
+        </div>
+
+        <div style="background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;text-align:center;">
+          <div class="blood-type-tag" style="margin:0 auto 0.75rem;">B+</div>
+          <div class="mini-bar-chart" style="margin-bottom:0.5rem;">
+            <div class="mini-bar" style="height:60%;"></div>
+            <div class="mini-bar" style="height:55%;"></div>
+            <div class="mini-bar" style="height:70%;"></div>
+            <div class="mini-bar" style="height:65%;"></div>
+            <div class="mini-bar" style="height:60%;"></div>
+          </div>
+          <div style="font-size:1.2rem;font-weight:700;font-family:var(--font-display);color:var(--color-text-primary);">97</div>
+          <div style="font-size:0.72rem;color:var(--color-text-muted);">units</div>
+          <span class="badge badge-green" style="margin-top:0.5rem;font-size:0.7rem;">Good</span>
+        </div>
+
+        <div style="background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;text-align:center;">
+          <div class="blood-type-tag" style="margin:0 auto 0.75rem;">O+</div>
+          <div class="mini-bar-chart" style="margin-bottom:0.5rem;">
+            <div class="mini-bar" style="height:100%;"></div>
+            <div class="mini-bar" style="height:90%;"></div>
+            <div class="mini-bar" style="height:95%;"></div>
+            <div class="mini-bar" style="height:85%;"></div>
+            <div class="mini-bar" style="height:100%;"></div>
+          </div>
+          <div style="font-size:1.2rem;font-weight:700;font-family:var(--font-display);color:var(--color-text-primary);">218</div>
+          <div style="font-size:0.72rem;color:var(--color-text-muted);">units</div>
+          <span class="badge badge-green" style="margin-top:0.5rem;font-size:0.7rem;">Excellent</span>
+        </div>
+
+        <div style="background:var(--color-surface-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;text-align:center;">
+          <div class="blood-type-tag" style="margin:0 auto 0.75rem;">AB−</div>
+          <div class="mini-bar-chart" style="margin-bottom:0.5rem;">
+            <div class="mini-bar" style="height:20%;background:var(--color-danger-light);"></div>
+            <div class="mini-bar" style="height:15%;background:var(--color-danger-light);"></div>
+            <div class="mini-bar" style="height:10%;background:var(--color-danger-light);"></div>
+            <div class="mini-bar" style="height:8%;background:var(--color-danger-light);"></div>
+            <div class="mini-bar" style="height:5%;background:var(--color-danger-light);"></div>
+          </div>
+          <div style="font-size:1.2rem;font-weight:700;font-family:var(--font-display);color:var(--color-danger);">4</div>
+          <div style="font-size:0.72rem;color:var(--color-text-muted);">units</div>
+          <span class="badge badge-red" style="margin-top:0.5rem;font-size:0.7rem;">Critical 🚨</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Donor Profile Summary -->
+    <div class="card animate-fade-in-up delay-5">
+      <div class="card-header">
+        <h3 class="card-title">👤 My Donor Profile</h3>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Profile editing requires backend.','info')">Edit Profile</button>
+      </div>
+      <div class="grid grid-2" style="gap:1.5rem;">
+        <div>
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
+            <div class="avatar avatar-lg" style="width:56px;height:56px;font-size:1.2rem;">JD</div>
+            <div>
+              <div style="font-weight:600;font-size:1rem;">John Doe</div>
+              <div style="font-size:0.82rem;color:var(--color-text-muted);">Verified Donor · Member since Jan 2023</div>
+              <span class="badge badge-green" style="margin-top:4px;font-size:0.7rem;">🟢 Available to Donate</span>
+            </div>
+          </div>
+          <div style="display:grid;gap:0.65rem;font-size:0.85rem;">
+            <div class="flex-between" style="padding:0.5rem 0;border-bottom:1px solid var(--color-border);">
+              <span style="color:var(--color-text-muted);">Blood Group</span>
+              <span class="blood-type-tag" style="width:36px;height:28px;font-size:0.78rem;border-radius:var(--radius-sm);">A+</span>
+            </div>
+            <div class="flex-between" style="padding:0.5rem 0;border-bottom:1px solid var(--color-border);">
+              <span style="color:var(--color-text-muted);">City</span>
+              <span style="font-weight:500;">New Delhi, India</span>
+            </div>
+            <div class="flex-between" style="padding:0.5rem 0;border-bottom:1px solid var(--color-border);">
+              <span style="color:var(--color-text-muted);">Phone</span>
+              <span style="font-weight:500;">+91 98765 43210</span>
+            </div>
+            <div class="flex-between" style="padding:0.5rem 0;">
+              <span style="color:var(--color-text-muted);">Last Donation</span>
+              <span style="font-weight:500;">Feb 20, 2025</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-muted);margin-bottom:1rem;">Achievements</div>
+          <div style="display:flex;flex-direction:column;gap:0.65rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:var(--color-surface-alt);border-radius:var(--radius-md);">
+              <span style="font-size:1.4rem;">🏅</span>
+              <div>
+                <div style="font-size:0.85rem;font-weight:600;">Regular Donor</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">Donated 10+ times</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:var(--color-surface-alt);border-radius:var(--radius-md);">
+              <span style="font-size:1.4rem;">⭐</span>
+              <div>
+                <div style="font-size:0.85rem;font-weight:600;">Verified Profile</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">Identity & health verified</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:var(--color-surface-alt);border-radius:var(--radius-md);">
+              <span style="font-size:1.4rem;">🚑</span>
+              <div>
+                <div style="font-size:0.85rem;font-weight:600;">Emergency Responder</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">Responded to 3 emergency alerts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
