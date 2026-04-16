@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donor Registration — E-Blood Bank</title>
+  <meta name="description" content="Register as a blood donor with E-Blood Bank. Complete your profile and start saving lives." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVBAR (Public)
+══════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar-inner">
+    <a href="signup.html" class="navbar-logo" aria-label="E-Blood Bank — back to role selection">
+      <div class="navbar-logo-icon">🩸</div>
+      <div class="navbar-logo-text">
+        E-Blood Bank
+        <span>Management System</span>
+      </div>
+    </a>
+
+    <div class="navbar-actions">
+      <span class="badge badge-red">Donor Registration</span>
+      <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     PAGE BODY
+══════════════════════════════════ -->
+<main class="register-page">
+  <div class="container">
+
+    <!-- Header -->
+    <header class="register-header animate-fade-in-up">
+      <span class="badge badge-red" style="margin-bottom:1rem;">💉 Donor</span>
+      <h1>Donor Registration</h1>
+      <p style="max-width:500px;margin:0.75rem auto 0; font-size:0.95rem; color:var(--color-text-secondary);">
+        Complete your profile to become a verified blood donor. It takes less than 5 minutes.
+      </p>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="register-progress animate-fade-in delay-1">
+      <div class="progress-step active">
+        <div class="progress-dot">1</div>
+        <div class="progress-label">Personal Info</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-dot">2</div>
+        <div class="progress-label">Medical Info</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-dot">3</div>
+        <div class="progress-label">Account Setup</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-dot">✓</div>
+        <div class="progress-label">Confirm</div>
+      </div>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="register-card animate-fade-in delay-2">
+      <form id="register-donor-form" novalidate data-on-valid="handleRegisterSubmit">
+
+        <!-- ─── STEP 1: Personal Information ─── -->
+        <div class="form-step">
+          <div class="form-section-title">👤 Personal Information</div>
+
+          <div class="form-grid form-grid-2">
+
+            <div class="form-group">
+              <label class="form-label" for="d-first-name">First Name <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="d-first-name" name="first_name" class="form-control"
+                  placeholder="John" autocomplete="given-name"
+                  data-validate="required minLength:2" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-last-name">Last Name <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="d-last-name" name="last_name" class="form-control"
+                  placeholder="Doe" autocomplete="family-name"
+                  data-validate="required minLength:2" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-dob">Date of Birth <span class="required">*</span></label>
+              <input type="date" id="d-dob" name="dob" class="form-control"
+                data-validate="required" />
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-gender">Gender <span class="required">*</span></label>
+              <select id="d-gender" name="gender" class="form-control" data-validate="required">
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer_not">Prefer not to say</option>
+              </select>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-phone">Phone Number <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">📞</span>
+                <input type="tel" id="d-phone" name="phone" class="form-control"
+                  placeholder="+91 98765 43210" autocomplete="tel"
+                  data-validate="required phone" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-city">City <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">📍</span>
+                <input type="text" id="d-city" name="city" class="form-control"
+                  placeholder="Your city" autocomplete="address-level2"
+                  data-validate="required" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label" for="d-address">Full Address</label>
+              <textarea id="d-address" name="address" class="form-control"
+                rows="2" placeholder="House / Street / Area, City, State, PIN"
+                style="resize:vertical;"></textarea>
+            </div>
+
+          </div>
+
+          <div class="flex" style="justify-content:flex-end; margin-top:1.75rem;">
+            <button type="button" class="btn btn-primary step-next">
+              Continue to Medical Info →
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── STEP 2: Medical Information ─── -->
+        <div class="form-step hidden">
+          <div class="form-section-title">🩺 Medical Information</div>
+
+          <div class="form-grid form-grid-2">
+
+            <div class="form-group">
+              <label class="form-label" for="d-blood-type">Blood Group <span class="required">*</span></label>
+              <select id="d-blood-type" name="blood_type" class="form-control" data-validate="required">
+                <option value="">Select blood group</option>
+                <option>A+</option><option>A−</option>
+                <option>B+</option><option>B−</option>
+                <option>AB+</option><option>AB−</option>
+                <option>O+</option><option>O−</option>
+              </select>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-weight">Weight (kg) <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">⚖️</span>
+                <input type="number" id="d-weight" name="weight" class="form-control"
+                  placeholder="55" min="45" max="200"
+                  data-validate="required" />
+              </div>
+              <span class="form-hint">Must be at least 45 kg to donate.</span>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-last-donation">Last Donation Date</label>
+              <input type="date" id="d-last-donation" name="last_donation_date" class="form-control" />
+              <span class="form-hint">Leave blank if first time donating.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-donations-count">Number of Previous Donations</label>
+              <div class="input-group">
+                <span class="input-icon">🩸</span>
+                <input type="number" id="d-donations-count" name="total_donations" class="form-control"
+                  placeholder="0" min="0" value="0" />
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Medical Eligibility Checklist -->
+          <div class="form-section mt-4">
+            <div class="form-section-title">✅ Eligibility Confirmation</div>
+
+            <div style="display:flex;flex-direction:column;gap:0.85rem;">
+
+              <label class="form-check">
+                <input type="checkbox" name="eligible_age" required />
+                <span class="form-check-label">I confirm I am between <strong>18 and 65</strong> years of age.</span>
+              </label>
+
+              <label class="form-check">
+                <input type="checkbox" name="eligible_health" required />
+                <span class="form-check-label">I am in good health and have not had a fever, cold, or infection in the past <strong>2 weeks</strong>.</span>
+              </label>
+
+              <label class="form-check">
+                <input type="checkbox" name="eligible_disease" required />
+                <span class="form-check-label">I do not have any transmissible blood-borne diseases (HIV, Hepatitis B/C, etc.).</span>
+              </label>
+
+              <label class="form-check">
+                <input type="checkbox" name="eligible_medication" required />
+                <span class="form-check-label">I have not taken any antibiotics in the past <strong>48 hours</strong>.</span>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
+            <button type="button" class="btn btn-ghost step-prev">← Back</button>
+            <button type="button" class="btn btn-primary step-next">Continue to Account Setup →</button>
+          </div>
+        </div>
+
+        <!-- ─── STEP 3: Account Setup ─── -->
+        <div class="form-step hidden">
+          <div class="form-section-title">🔐 Account Setup</div>
+
+          <div class="form-grid form-grid-2">
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label" for="d-email">Email Address <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">✉️</span>
+                <input type="email" id="d-email" name="email" class="form-control"
+                  placeholder="you@example.com" autocomplete="email"
+                  data-validate="required email" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-password">Password <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="d-password" name="password" class="form-control"
+                  placeholder="Create a strong password"
+                  data-validate="required password" />
+                <button type="button" class="input-action" data-toggle-password="#d-password">👁️</button>
+              </div>
+              <span class="form-hint">Min 8 chars with uppercase, lowercase & number.</span>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="d-confirm-password">Confirm Password <span class="required">*</span></label>
+              <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="d-confirm-password" name="confirm_password" class="form-control"
+                  placeholder="Repeat your password"
+                  data-validate="required match:#d-password" />
+                <button type="button" class="input-action" data-toggle-password="#d-confirm-password">👁️</button>
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+          </div>
+
+          <div class="form-group mt-3">
+            <label class="form-check">
+              <input type="checkbox" name="notify_sms" />
+              <span class="form-check-label">Notify me via SMS when my blood group is urgently needed.</span>
+            </label>
+          </div>
+
+          <div class="form-group mt-2">
+            <label class="form-check">
+              <input type="checkbox" name="available_donate" checked />
+              <span class="form-check-label">Mark me as <strong>available to donate</strong> immediately after registration.</span>
+            </label>
+          </div>
+
+          <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
+            <button type="button" class="btn btn-ghost step-prev">← Back</button>
+            <button type="button" class="btn btn-primary step-next">Review & Confirm →</button>
+          </div>
+        </div>
+
+        <!-- ─── STEP 4: Confirm ─── -->
+        <div class="form-step hidden">
+          <div class="form-section-title">🎉 Almost There!</div>
+
+          <div class="alert alert-info" style="margin-bottom:1.5rem;">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+              Please review your information. Once submitted, you'll receive a verification email.
+              Your account will be activated after admin review (usually within 24 hours).
+            </div>
+          </div>
+
+          <!-- Summary box -->
+          <div class="form-section" style="margin-bottom:1.5rem;">
+            <div class="form-section-title">📋 Registration Summary</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-size:0.88rem;">
+              <div>
+                <span style="color:var(--color-text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Role</span>
+                <div style="font-weight:500;margin-top:2px;">Blood Donor 💉</div>
+              </div>
+              <div>
+                <span style="color:var(--color-text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Status</span>
+                <div><span class="badge badge-amber">Pending Verification</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-check">
+              <input type="checkbox" name="terms" data-validate="required" />
+              <span class="form-check-label">
+                I agree to the <a href="#" style="color:var(--color-primary);">Terms of Service</a>
+                and <a href="#" style="color:var(--color-primary);">Privacy Policy</a> of E-Blood Bank.
+              </span>
+            </label>
+            <span class="form-error"></span>
+          </div>
+
+          <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
+            <button type="button" class="btn btn-ghost step-prev">← Edit Information</button>
+            <button type="submit" class="btn btn-primary btn-lg">
+              🩸 Submit Registration
+            </button>
+          </div>
+
+          <p class="text-center mt-3" style="font-size:0.82rem; color:var(--color-text-muted);">
+            Already have an account? <a href="login.html" style="color:var(--color-primary);">Sign in instead →</a>
+          </p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</main>
+
+<script src="js/script.js"></script>
+</body>
+</html>
