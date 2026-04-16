@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — E-Blood Bank</title>
+  <meta name="description" content="Create your E-Blood Bank account as a donor or blood requester." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- Left Panel -->
+  <aside class="auth-left">
+    <div class="auth-left-logo">
+      <div class="auth-left-logo-icon">🩸</div>
+      <div class="auth-left-logo-text">
+        E-Blood Bank
+        <span>Management System</span>
+      </div>
+    </div>
+
+    <div class="auth-left-content animate-fade-in-up">
+      <h2>Who are you joining us as today?</h2>
+      <p>
+        Whether you're a life-saving donor or someone in need of blood,
+        we have a dedicated experience built just for you.
+        Register in under 3 minutes.
+      </p>
+
+      <!-- Benefit pills -->
+      <div style="display:flex; flex-direction:column; gap:0.85rem; margin-top:2rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem; color:rgba(255,255,255,0.85); font-size:0.88rem;">
+          <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✓</span>
+          Free to register — always
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem; color:rgba(255,255,255,0.85); font-size:0.88rem;">
+          <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✓</span>
+          Secure & private data handling
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem; color:rgba(255,255,255,0.85); font-size:0.88rem;">
+          <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✓</span>
+          Real-time blood availability
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem; color:rgba(255,255,255,0.85); font-size:0.88rem;">
+          <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✓</span>
+          24/7 emergency request support
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-left-footer">
+      © 2025 E-Blood Bank. All rights reserved.
+    </div>
+  </aside>
+
+  <!-- Right Panel -->
+  <main class="auth-right">
+    <div class="auth-form-wrap animate-scale-in">
+
+      <div class="auth-form-header">
+        <div class="navbar-logo" style="margin-bottom:1.5rem;">
+          <div class="navbar-logo-icon">🩸</div>
+          <div class="navbar-logo-text">
+            E-Blood Bank
+            <span>Management System</span>
+          </div>
+        </div>
+        <h1 class="auth-form-title">Create your account</h1>
+        <p class="auth-form-subtitle">
+          Already have an account?
+          <a href="login.html">Sign in →</a>
+        </p>
+      </div>
+
+      <!-- Role Selection -->
+      <div style="margin-bottom:1.5rem;">
+        <p style="font-size:0.88rem; font-weight:600; color:var(--color-text-primary); margin-bottom:1rem; font-family:var(--font-display);">
+          I want to join as a…
+        </p>
+
+        <div class="role-selector">
+
+          <div class="role-card" data-role="donor">
+            <span class="role-card-icon">💉</span>
+            <div class="role-card-title">Blood Donor</div>
+            <div class="role-card-desc">
+              I want to donate blood and save lives in my community.
+            </div>
+          </div>
+
+          <div class="role-card" data-role="requester">
+            <span class="role-card-icon">🏥</span>
+            <div class="role-card-title">Blood Requester</div>
+            <div class="role-card-desc">
+              I or someone I know needs blood — I want to request it.
+            </div>
+          </div>
+
+        </div>
+
+        <p style="font-size:0.75rem; color:var(--color-text-muted); text-align:center; margin-top:0.75rem;">
+          You can change your role later from your account settings.
+        </p>
+      </div>
+
+      <!-- Continue Button -->
+      <button
+        id="role-continue-btn"
+        class="btn btn-ghost btn-lg btn-block"
+        disabled
+        style="cursor:not-allowed;"
+      >
+        Continue to Registration →
+      </button>
+
+      <p class="text-center mt-3" style="font-size:0.82rem; color:var(--color-text-muted);">
+        By registering, you agree to our
+        <a href="#" style="color:var(--color-primary);">Terms of Service</a>
+        and
+        <a href="#" style="color:var(--color-primary);">Privacy Policy</a>.
+      </p>
+
+    </div>
+
+    <button class="theme-toggle" onclick="ThemeManager.toggle()"
+      style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:200;"
+      aria-label="Toggle theme">🌙</button>
+  </main>
+</div>
+
+<script src="js/script.js"></script>
+<script>
+  // Remove cursor:not-allowed when role is selected
+  document.querySelectorAll('.role-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const btn = document.getElementById('role-continue-btn');
+      if (btn) btn.style.cursor = 'pointer';
+    });
+  });
+</script>
+</body>
+</html>
