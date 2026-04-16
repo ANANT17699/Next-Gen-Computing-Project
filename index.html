@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home — E-Blood Bank</title>
+  <meta name="description" content="E-Blood Bank — The modern platform connecting blood donors with those in need." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVBAR (Internal)
+══════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar-inner">
+
+    <!-- Logo -->
+    <a href="index.html" class="navbar-logo" aria-label="E-Blood Bank Home">
+      <div class="navbar-logo-icon">🩸</div>
+      <div class="navbar-logo-text">
+        E-Blood Bank
+        <span>Management System</span>
+      </div>
+    </a>
+
+    <!-- Desktop Nav -->
+    <ul class="navbar-nav" role="list">
+      <li><a href="index.html" class="nav-link active">Home</a></li>
+      <li><a href="#features" class="nav-link">Features</a></li>
+      <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+      <a href="request-blood.html" class="btn btn-primary btn-sm">🩸 Request Blood</a>
+      <button class="theme-toggle" onclick="ThemeManager.toggle()" aria-label="Toggle theme">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html" class="nav-link active">🏠 Home</a>
+  <a href="#features" class="nav-link">✨ Features</a>
+  <a href="#how-it-works" class="nav-link">⚙️ How It Works</a>
+  <a href="contact.html" class="nav-link">📬 Contact</a>
+  <div class="mobile-nav-divider"></div>
+  <div class="mobile-nav-actions">
+    <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+    <a href="request-blood.html" class="btn btn-primary">🩸 Request Blood</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     HERO SECTION
+══════════════════════════════════ -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-bg">
+    <div class="hero-bg-circle hero-bg-circle-1"></div>
+    <div class="hero-bg-circle hero-bg-circle-2"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-grid">
+
+      <!-- Left: Text Content -->
+      <div>
+        <div class="hero-eyebrow animate-fade-in-up">
+          <span class="pulse-dot"></span>
+          Live Blood Availability System
+        </div>
+
+        <h1 class="hero-title animate-fade-in-up delay-1">
+          Donate Blood.<br/>
+          <span class="highlight">Save Lives.</span><br/>
+          Every Drop Counts.
+        </h1>
+
+        <p class="hero-description animate-fade-in-up delay-2">
+          E-Blood Bank is a modern, real-time platform connecting verified
+          blood donors with patients in need — across hospitals, cities, and blood types.
+          Fast. Reliable. Life-saving.
+        </p>
+
+        <div class="hero-actions animate-fade-in-up delay-3">
+          <a href="register-donor.html" class="btn btn-primary btn-xl">
+            💉 Become a Donor
+          </a>
+          <a href="request-blood.html" class="btn btn-outline btn-xl">
+            🏥 Request Blood
+          </a>
+        </div>
+
+        <div class="hero-stats animate-fade-in-up delay-4">
+          <div>
+            <div class="hero-stat-value" data-counter="12400">0</div>
+            <div class="hero-stat-label">Registered Donors</div>
+          </div>
+          <div>
+            <div class="hero-stat-value" data-counter="8900">0</div>
+            <div class="hero-stat-label">Lives Saved</div>
+          </div>
+          <div>
+            <div class="hero-stat-value" data-counter="47">0</div>
+            <div class="hero-stat-label">Partner Hospitals</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Blood Availability Card -->
+      <div class="hero-visual animate-fade-in delay-3">
+
+        <!-- Floating badges -->
+        <div class="hero-badge hero-badge-1">
+          <span>🟢</span>
+          <span>O+ Available Now</span>
+        </div>
+        <div class="hero-badge hero-badge-2">
+          <span>🚨</span>
+          <span>AB− Critically Needed</span>
+        </div>
+
+        <div class="hero-visual-main">
+          <div class="flex-between mb-2">
+            <div>
+              <h3 style="font-size:1rem; margin-bottom:0.15rem;">Blood Availability</h3>
+              <p style="font-size:0.78rem; color:var(--color-text-muted);">Live stock — updated hourly</p>
+            </div>
+            <span class="badge badge-green">🟢 System Online</span>
+          </div>
+
+          <div class="hero-blood-groups">
+            <div class="blood-group-item">
+              <div class="type">A+</div>
+              <div class="availability-dot"></div>
+              <div class="units">142 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">A−</div>
+              <div class="availability-dot low"></div>
+              <div class="units">18 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">B+</div>
+              <div class="availability-dot"></div>
+              <div class="units">97 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">B−</div>
+              <div class="availability-dot low"></div>
+              <div class="units">22 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">AB+</div>
+              <div class="availability-dot"></div>
+              <div class="units">54 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">AB−</div>
+              <div class="availability-dot critical"></div>
+              <div class="units">4 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">O+</div>
+              <div class="availability-dot"></div>
+              <div class="units">218 u</div>
+            </div>
+            <div class="blood-group-item">
+              <div class="type">O−</div>
+              <div class="availability-dot low"></div>
+              <div class="units">11 u</div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="flex gap-2 mt-3" style="flex-wrap:wrap;">
+            <div class="flex gap-1" style="align-items:center;">
+              <span class="availability-dot"></span>
+              <span style="font-size:0.72rem; color:var(--color-text-muted);">Available</span>
+            </div>
+            <div class="flex gap-1" style="align-items:center;">
+              <span class="availability-dot low"></span>
+              <span style="font-size:0.72rem; color:var(--color-text-muted);">Low Stock</span>
+            </div>
+            <div class="flex gap-1" style="align-items:center;">
+              <span class="availability-dot critical"></span>
+              <span style="font-size:0.72rem; color:var(--color-text-muted);">Critical</span>
+            </div>
+          </div>
+
+          <a href="request-blood.html" class="btn btn-primary btn-block mt-3">
+            🩸 Submit a Blood Request
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FEATURES SECTION
+══════════════════════════════════ -->
+<section class="section" id="features" aria-label="Features">
+  <div class="container">
+
+    <header class="section-header animate-fade-in-up">
+      <span class="section-eyebrow">Why E-Blood Bank?</span>
+      <h2 class="section-title">Everything you need,<br/>in one trusted platform</h2>
+      <p class="section-subtitle">
+        Built for hospitals, donors, and families in need — with tools to make
+        blood access faster, easier, and more reliable than ever before.
+      </p>
+    </header>
+
+    <div class="grid grid-3 animate-fade-in-up delay-1">
+
+      <div class="feature-card">
+        <div class="feature-icon">🔴</div>
+        <h3 class="feature-title">Real-Time Blood Stock</h3>
+        <p class="feature-desc">
+          Monitor live availability of all blood groups across registered banks.
+          Instant updates when stock runs critical.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3 class="feature-title">Location-Based Matching</h3>
+        <p class="feature-desc">
+          Find the nearest compatible donor or blood bank in your city
+          with smart geographic matching.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🚨</div>
+        <h3 class="feature-title">Emergency Alerts</h3>
+        <p class="feature-desc">
+          Receive SMS and in-app alerts when your blood type is critically needed
+          near your registered location.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Verified Donors</h3>
+        <p class="feature-desc">
+          Every donor is screened and verified by our admin team to ensure
+          blood safety and eligibility standards.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3 class="feature-title">Digital Health Records</h3>
+        <p class="feature-desc">
+          Maintain your complete donation history, certificates,
+          and medical eligibility records in one secure place.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏥</div>
+        <h3 class="feature-title">Hospital Integration</h3>
+        <p class="feature-desc">
+          Partner hospitals can directly place and track blood requests,
+          with real-time fulfillment status updates.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════ -->
+<section class="section" id="how-it-works" style="background:var(--color-surface);" aria-label="How it works">
+  <div class="container">
+
+    <header class="section-header animate-fade-in-up">
+      <span class="section-eyebrow">Simple Process</span>
+      <h2 class="section-title">How it works</h2>
+      <p class="section-subtitle">From registration to saving a life — it takes just a few steps.</p>
+    </header>
+
+    <!-- For Donors -->
+    <div style="margin-bottom:3.5rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:2rem;justify-content:center;">
+        <span class="badge badge-red" style="font-size:0.8rem;">💉 For Donors</span>
+      </div>
+      <div class="steps-grid animate-fade-in-up delay-1">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <h4 class="step-title">Register Free</h4>
+          <p class="step-desc">Create your donor profile with personal and medical information in under 5 minutes.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <h4 class="step-title">Get Verified</h4>
+          <p class="step-desc">Our team reviews your eligibility. Approved donors are marked as active within 24 hours.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <h4 class="step-title">Receive Alerts</h4>
+          <p class="step-desc">Get notified when your blood type is needed near you. Accept or decline at your discretion.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <h4 class="step-title">Donate & Save</h4>
+          <p class="step-desc">Visit the designated hospital or blood bank. Log your donation and earn a digital certificate.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- For Requesters -->
+    <div>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:2rem;justify-content:center;">
+        <span class="badge badge-blue" style="font-size:0.8rem;">🏥 For Requesters</span>
+      </div>
+      <div class="steps-grid animate-fade-in-up delay-2">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <h4 class="step-title">Register Account</h4>
+          <p class="step-desc">Create a requester profile with your patient and hospital information.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <h4 class="step-title">Submit Request</h4>
+          <p class="step-desc">Specify the blood type, units needed, urgency level, and hospital location.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <h4 class="step-title">Match Found</h4>
+          <p class="step-desc">Our system instantly matches you with available verified donors nearby.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <h4 class="step-title">Receive Blood</h4>
+          <p class="step-desc">Coordinate with the matched donor or bank and track the delivery in real time.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     BLOOD TYPE INFO
+══════════════════════════════════ -->
+<section class="section" aria-label="Blood type compatibility">
+  <div class="container">
+
+    <header class="section-header animate-fade-in-up">
+      <span class="section-eyebrow">Know Your Type</span>
+      <h2 class="section-title">Blood type compatibility</h2>
+      <p class="section-subtitle">Not all blood types are compatible. Here's a quick reference guide.</p>
+    </header>
+
+    <div class="table-wrap animate-fade-in-up delay-1">
+      <table class="table" aria-label="Blood type compatibility table">
+        <thead>
+          <tr>
+            <th>Blood Type</th>
+            <th>Can Donate To</th>
+            <th>Can Receive From</th>
+            <th>Universal Donor?</th>
+            <th>Universal Receiver?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="blood-type-tag">A+</span></td>
+            <td>A+, AB+</td>
+            <td>A+, A−, O+, O−</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">A−</span></td>
+            <td>A+, A−, AB+, AB−</td>
+            <td>A−, O−</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">B+</span></td>
+            <td>B+, AB+</td>
+            <td>B+, B−, O+, O−</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">B−</span></td>
+            <td>B+, B−, AB+, AB−</td>
+            <td>B−, O−</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">AB+</span></td>
+            <td>AB+ only</td>
+            <td>All blood types</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-green">Yes ✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">AB−</span></td>
+            <td>AB+, AB−</td>
+            <td>A−, B−, AB−, O−</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">O+</span></td>
+            <td>A+, B+, AB+, O+</td>
+            <td>O+, O−</td>
+            <td><span class="badge badge-gray">No</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+          <tr>
+            <td><span class="blood-type-tag">O−</span></td>
+            <td>All blood types</td>
+            <td>O− only</td>
+            <td><span class="badge badge-green">Yes ✓</span></td>
+            <td><span class="badge badge-gray">No</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CTA BANNER
+══════════════════════════════════ -->
+<section class="section-sm" aria-label="Call to action">
+  <div class="container animate-fade-in-up">
+    <div class="cta-banner">
+      <div class="cta-banner-content">
+        <h2>Ready to make a difference?</h2>
+        <p>
+          Join over 12,000 donors who have already registered on E-Blood Bank.
+          Your single donation can save up to 3 lives. Start today — it's free.
+        </p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <a href="register-donor.html" class="btn btn-white btn-xl">
+            💉 Register as Donor
+          </a>
+          <a href="request-blood.html" class="btn btn-outline btn-xl"
+            style="color:#fff; border-color:rgba(255,255,255,0.5);">
+            🏥 Request Blood Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <a href="index.html" class="navbar-logo" style="margin-bottom:0.5rem;">
+          <div class="navbar-logo-icon">🩸</div>
+          <div class="navbar-logo-text">
+            E-Blood Bank
+            <span>Management System</span>
+          </div>
+        </a>
+        <p>
+          A modern, life-saving platform connecting blood donors with patients in need.
+          Available 24/7 for emergency blood requests.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link">→ Home</a></li>
+          <li><a href="dashboard.html" class="footer-link">→ Dashboard</a></li>
+          <li><a href="request-blood.html" class="footer-link">→ Request Blood</a></li>
+          <li><a href="contact.html" class="footer-link">→ Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Register</h4>
+        <ul class="footer-links">
+          <li><a href="register-donor.html" class="footer-link">→ As a Donor</a></li>
+          <li><a href="register-requester.html" class="footer-link">→ As a Requester</a></li>
+          <li><a href="login.html" class="footer-link">→ Sign In</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Emergency</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+911" class="footer-link">📞 +91 1800-XXX-XXXX</a></li>
+          <li><a href="mailto:emergency@ebloodbank.in" class="footer-link">✉️ emergency@ebloodbank.in</a></li>
+          <li><span class="badge badge-green" style="margin-top:0.25rem;">🟢 24/7 Available</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 E-Blood Bank Management System. All rights reserved.</span>
+      <div class="flex gap-2">
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <a href="#" class="footer-link">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
