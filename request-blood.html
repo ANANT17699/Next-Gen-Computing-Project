@@ -6,71 +6,10 @@
   <title>Request Blood — E-Blood Bank</title>
   <meta name="description" content="Submit an urgent or scheduled blood request on E-Blood Bank." />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/request-blood.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>" />
   <style>
-    /* Availability ticker */
-    .availability-ticker {
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      margin-top: 0.75rem;
-    }
-    .ticker-item {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0.65rem;
-      background: var(--color-surface-alt);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-full);
-      font-size: 0.75rem;
-      font-weight: 600;
-      font-family: var(--font-display);
-      color: var(--color-text-secondary);
-      transition: all var(--transition-base);
-    }
-    .ticker-item:hover {
-      border-color: var(--color-primary);
-      color: var(--color-primary);
-    }
-    .ticker-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .ticker-dot.ok       { background: var(--color-success); }
-    .ticker-dot.low      { background: var(--color-warning); }
-    .ticker-dot.critical { background: var(--color-danger); animation: pulse-sm 1.5s infinite; }
-
-    @keyframes pulse-sm {
-      0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.4); }
-      50%      { box-shadow: 0 0 0 5px rgba(220,38,38,0); }
-    }
-
-    /* Recent requests table accent */
-    .priority-high   { color: var(--color-danger);  font-weight: 600; }
-    .priority-medium { color: var(--color-warning); font-weight: 600; }
-    .priority-low    { color: var(--color-success); font-weight: 600; }
-
-    /* Confirmation card */
-    .confirm-summary {
-      background: var(--color-surface-alt);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      margin-top: 1.5rem;
-    }
-    .confirm-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--color-border);
-      font-size: 0.88rem;
-    }
-    .confirm-row:last-child { border-bottom: none; }
-    .confirm-row-label { color: var(--color-text-muted); }
-    .confirm-row-value { font-weight: 500; color: var(--color-text-primary); }
+    
   </style>
 </head>
 <body>
@@ -588,13 +527,13 @@
     radio.addEventListener('change', () => {
       const stock = {
         'A+': { units: 142, status: 'ok' },
-        'A−': { units: 18,  status: 'low' },
+        'A-': { units: 18,  status: 'low' },
         'B+': { units: 97,  status: 'ok' },
-        'B−': { units: 22,  status: 'low' },
+        'B-': { units: 22,  status: 'low' },
         'AB+':{ units: 54,  status: 'ok' },
-        'AB−':{ units: 4,   status: 'critical' },
+        'AB-':{ units: 4,   status: 'critical' },
         'O+': { units: 218, status: 'ok' },
-        'O−': { units: 11,  status: 'low' },
+        'O-': { units: 11,  status: 'low' },
       };
       const info = stock[radio.value];
       if (!info) return;
