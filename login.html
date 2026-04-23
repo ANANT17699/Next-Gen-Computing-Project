@@ -149,6 +149,39 @@
 
       </form>
 
+      <!-- Email Verification Modal -->
+      <div id="login-verification-modal" class="hidden" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000;">
+        <div style="background:var(--color-surface); padding:2rem; border-radius:var(--radius-lg); max-width:400px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:slideUp 0.3s ease;">
+          <h2 style="margin:0 0 0.5rem 0; font-size:1.5rem; color:var(--color-text-primary);">✉️ Verify Your Email</h2>
+          <p style="margin:0 0 1.5rem 0; color:var(--color-text-secondary); font-size:0.9rem;">
+            We sent a 6-digit verification code to your registered email. Enter it below to continue.
+          </p>
+
+          <div style="margin-bottom:1.5rem;">
+            <label class="form-label" style="margin-bottom:0.5rem;">Verification Code</label>
+            <div class="input-group">
+              <span class="input-icon">🔐</span>
+              <input type="text" id="login-verification-code" class="form-control" 
+                placeholder="000000" maxlength="6" inputmode="numeric"
+                style="font-size:1.2rem; letter-spacing:0.2em; text-align:center;" />
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.75rem;">
+            <button type="button" id="login-verify-btn" class="btn btn-primary" style="flex:1;">
+              ✓ Verify
+            </button>
+            <button type="button" id="login-resend-btn" class="btn btn-ghost" style="flex:1;">
+              Resend
+            </button>
+          </div>
+
+          <p style="text-align:center; margin:1rem 0 0 0; font-size:0.8rem; color:var(--color-text-muted);">
+            Didn't receive it? Check spam folder or <a href="#" onclick="showToast('Contact support for help', 'info'); return false;" style="color:var(--color-primary);">contact support</a>.
+          </p>
+        </div>
+      </div>
+
     </div>
 
     <!-- Theme Toggle (bottom right) -->

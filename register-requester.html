@@ -229,6 +229,31 @@
               <span class="form-error"></span>
             </div>
 
+            <!-- Email Verification Section -->
+            <div id="r-email-verification-section" class="form-group hidden" style="grid-column:1/-1; background:var(--color-surface-variant); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+              <label class="form-label">✉️ Verify Your Email</label>
+              <p style="font-size:0.85rem; color:var(--color-text-secondary); margin-bottom:0.75rem;">
+                We sent a 6-digit verification code to your email. Enter it below to verify your account.
+              </p>
+              <div class="input-group" style="margin-bottom:0.75rem;">
+                <span class="input-icon">🔐</span>
+                <input type="text" id="r-verification-code-input" class="form-control" 
+                  placeholder="000000" maxlength="6" inputmode="numeric"
+                  style="font-size:1.2rem; letter-spacing:0.2em; text-align:center;" />
+              </div>
+              <div style="display:flex; gap:0.5rem;">
+                <button type="button" id="r-verify-code-btn" class="btn btn-primary" style="flex:1;">
+                  ✓ Verify Code
+                </button>
+                <button type="button" id="r-resend-verification-code" class="btn btn-ghost" style="flex:1;">
+                  Resend Code
+                </button>
+              </div>
+              <button type="button" id="r-send-verification-code-btn" class="btn btn-outline" style="display:none;">
+                Send Code
+              </button>
+            </div>
+
             <div class="form-group">
               <label class="form-label" for="r-password">Password <span class="required">*</span></label>
               <div class="input-group">
