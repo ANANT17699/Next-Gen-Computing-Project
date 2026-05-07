@@ -24,13 +24,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // EMAIL SERVICE SETUP
 // ══════════════════════════════════════════════════════════
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
+  host: process.env.EMAIL_HOST || "smtp.sendgrid.net",
+  port: Number(process.env.EMAIL_PORT || 587),
   secure: process.env.EMAIL_SECURE === "true",
 
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.EMAIL_USER || "apikey",
+    pass: process.env.EMAIL_PASS || process.env.SENDGRID_API_KEY,
   },
 });
 
