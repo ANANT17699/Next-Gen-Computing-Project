@@ -13,86 +13,187 @@ const UserManager = {
   USERS_STORAGE_KEY: "ebb-users",
   CURRENT_USER_KEY: "ebb-current-user",
   VERIFICATION_KEY: "ebb-verification-codes",
+  API_BASE_URL: "http://localhost:3000",
 
   // Generate a 6-digit verification code
   generateVerificationCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
   },
 
-  // Send verification code (simulated - in real app, use backend email service)
-  sendVerificationCode(email) {
-    const code = this.generateVerificationCode();
-    const codes = JSON.parse(
-      localStorage.getItem(this.VERIFICATION_KEY) || "{}",
-    );
-    codes[email] = {
-      code: code,
-      timestamp: Date.now(),
-      attempts: 0,
-    };
-    localStorage.setItem(this.VERIFICATION_KEY, JSON.stringify(codes));
+  // Send verification code via backend email service
+  async sendVerificationCode(email, firstName = "", lastName = "") {
+    try {
+      const response = await fetch(
+        `${this.API_BASE_URL}/api/send-verification-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, firstName, lastName }),
+        },
+      );
 
-    // Simulate sending email - show code in toast for demo
-    showToast(
-      `✉️ Verification code sent to ${email}\n(Demo: ${code})`,
-      "info",
-      5000,
-    );
-    console.log(`Verification code for ${email}: ${code}`);
-    return code;
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        const message = result?.message || "Unable to send verification code.";
+        showToast(message, "error");
+        return false;
+      }
+
+      showToast(
+        `✉️ Verification code sent to ${email}. Check your inbox.`,
+        "success",
+        5000,
+      );
+      return true;
+    } catch (error) {
+      console.error("sendVerificationCode error:", error);
+      showToast(
+        "Unable to send verification code. Please try again later.",
+        "error",
+      );
+      return false;
+    }
   },
 
-  // Verify the code entered by user
-  verifyCode(email, code) {
-    const codes = JSON.parse(
-      localStorage.getItem(this.VERIFICATION_KEY) || "{}",
-    );
-    const verif = codes[email];
+  // Verify the code entered by user with backend
+  async verifyCode(email, code) {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/api/verify-code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, code }),
+      });
 
-    if (!verif) {
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        const message = result?.message || "Invalid verification code.";
+        showToast(message, "error");
+        return false;
+      }
+
+      showToast(result.message || "Email verified successfully.", "success");
+      return true;
+    } catch (error) {
+      console.error("verifyCode error:", error);
+      showToast("Unable to verify code. Please try again.", "error");
+      return false;
+    }
+  },
+
+  // Send password reset code via backend email service
+  async sendPasswordResetCode(email) {
+    try {
+      const users = JSON.parse(
+        localStorage.getItem(this.USERS_STORAGE_KEY) || "[]",
+      );
+      const existingUser = users.find((u) => u.email === email);
+
+      if (!existingUser) {
+        showToast(
+          "Email not found. Please register first or check your email.",
+          "error",
+        );
+        return false;
+      }
+
+      const response = await fetch(
+        `${this.API_BASE_URL}/api/send-password-reset-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        const message = result?.message || "Unable to send reset code.";
+        showToast(message, "error");
+        return false;
+      }
+
       showToast(
-        "No verification code found. Please request a new one.",
+        `✉️ Password reset code sent to ${email}. Check your inbox.`,
+        "success",
+        5000,
+      );
+      return true;
+    } catch (error) {
+      console.error("sendPasswordResetCode error:", error);
+      showToast(
+        "Unable to send password reset code. Please try again later.",
         "error",
       );
       return false;
     }
+  },
 
-    // Check if code expired (10 minutes)
-    if (Date.now() - verif.timestamp > 10 * 60 * 1000) {
-      delete codes[email];
-      localStorage.setItem(this.VERIFICATION_KEY, JSON.stringify(codes));
-      showToast(
-        "Verification code expired. Please request a new one.",
-        "error",
+  async resetPassword(email, code, newPassword) {
+    try {
+      const users = JSON.parse(
+        localStorage.getItem(this.USERS_STORAGE_KEY) || "[]",
       );
+      const userIndex = users.findIndex((u) => u.email === email);
+
+      if (userIndex === -1) {
+        showToast(
+          "Email not found. Please register first or use the correct account.",
+          "error",
+        );
+        return false;
+      }
+
+      const response = await fetch(`${this.API_BASE_URL}/api/reset-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, code, newPassword }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        const message = result?.message || "Unable to reset password.";
+        showToast(message, "error");
+        return false;
+      }
+
+      users[userIndex].password = newPassword;
+      localStorage.setItem(this.USERS_STORAGE_KEY, JSON.stringify(users));
+
+      const current = JSON.parse(
+        localStorage.getItem(this.CURRENT_USER_KEY) || "null",
+      );
+      if (current && current.email === email) {
+        localStorage.setItem(
+          this.CURRENT_USER_KEY,
+          JSON.stringify({
+            ...current,
+            password: newPassword,
+          }),
+        );
+      }
+
+      showToast(
+        result.message || "Password has been reset successfully.",
+        "success",
+      );
+      return true;
+    } catch (error) {
+      console.error("resetPassword error:", error);
+      showToast("Unable to reset password. Please try again.", "error");
       return false;
     }
-
-    // Check attempts (max 3)
-    if (verif.attempts >= 3) {
-      delete codes[email];
-      localStorage.setItem(this.VERIFICATION_KEY, JSON.stringify(codes));
-      showToast(
-        "Too many failed attempts. Please request a new code.",
-        "error",
-      );
-      return false;
-    }
-
-    if (verif.code !== code) {
-      verif.attempts++;
-      localStorage.setItem(this.VERIFICATION_KEY, JSON.stringify(codes));
-      showToast(
-        `Invalid code. ${3 - verif.attempts} attempts remaining.`,
-        "error",
-      );
-      return false;
-    }
-
-    // Code verified - remove it
-    delete codes[email];
-    localStorage.setItem(this.VERIFICATION_KEY, JSON.stringify(codes));
-    return true;
   },
 
   // Register new user
@@ -778,6 +879,18 @@ function handleLoginSubmit(formEl) {
    14. REGISTER FORM HANDLER
 ══════════════════════════════════════════════════════════ */
 function handleRegisterSubmit(formEl) {
+  const email = formEl.querySelector('input[type="email"]')?.value.trim();
+
+  // ✅ REQUIRED: Check if email is verified
+  const verifiedEmails = JSON.parse(
+    sessionStorage.getItem("ebb-verified-emails") || "[]",
+  );
+
+  if (!email || !verifiedEmails.includes(email)) {
+    showToast("❌ Please verify your email first before registering.", "error");
+    return;
+  }
+
   const btn = formEl.querySelector('[type="submit"]');
   const originalHTML = btn.innerHTML;
 
@@ -817,6 +930,7 @@ function handleRegisterSubmit(formEl) {
 
         setTimeout(() => {
           sessionStorage.removeItem("ebb-selected-role");
+          sessionStorage.removeItem("ebb-verified-emails");
           window.location.href = "dashboard.html";
         }, 1500);
       }
@@ -920,30 +1034,69 @@ function initEmailVerification() {
     // Find the email input - search for any email input in the form
     const form = verificationContainer.closest("form");
     const emailInput = form ? form.querySelector('input[type="email"]') : null;
+    const submitBtn = form ? form.querySelector('[type="submit"]') : null;
 
     if (!emailInput) return;
 
+    // ✅ AUTO-SEND CODE when email field loses focus
+    emailInput.addEventListener("blur", async () => {
+      const email = emailInput.value.trim();
+      const isVerified = JSON.parse(
+        sessionStorage.getItem("ebb-verified-emails") || "[]",
+      ).includes(email);
+
+      // Only auto-send if email is valid and not already verified
+      if (
+        email &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+        !isVerified &&
+        !verificationContainer.classList.contains("hidden")
+      ) {
+        const pendingEmail = sessionStorage.getItem("ebb-pending-email");
+        if (pendingEmail !== email) {
+          sessionStorage.setItem("ebb-pending-email", email);
+          const firstName =
+            form.querySelector('[name="first_name"]')?.value.trim() || "";
+          const lastName =
+            form.querySelector('[name="last_name"]')?.value.trim() || "";
+          await UserManager.sendVerificationCode(email, firstName, lastName);
+        }
+      }
+    });
+
     // Create a "Send Code" button if not showing verification section by default
     if (sendCodeBtn) {
-      sendCodeBtn.addEventListener("click", () => {
+      sendCodeBtn.addEventListener("click", async () => {
         const email = emailInput.value.trim();
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           showToast("Please enter a valid email address first.", "warning");
           return;
         }
 
+        const firstName =
+          form.querySelector('[name="first_name"]')?.value.trim() || "";
+        const lastName =
+          form.querySelector('[name="last_name"]')?.value.trim() || "";
+
         // Mark email as pending verification
         sessionStorage.setItem("ebb-pending-email", email);
-        UserManager.sendVerificationCode(email);
-        verificationContainer.classList.remove("hidden");
-        emailInput.disabled = true;
-        if (sendCodeBtn) sendCodeBtn.disabled = true;
+        const sent = await UserManager.sendVerificationCode(
+          email,
+          firstName,
+          lastName,
+        );
+        if (sent) {
+          verificationContainer.classList.remove("hidden");
+          emailInput.disabled = true;
+          if (sendCodeBtn) sendCodeBtn.disabled = true;
+          if (submitBtn) submitBtn.disabled = true;
+        }
       });
     }
 
-    // Verify button
+    // ✅ VERIFY button - marks email as verified
     if (verifyBtn) {
-      verifyBtn.addEventListener("click", () => {
+      verifyBtn.addEventListener("click", async () => {
         const code = codeInput?.value.trim();
         const email =
           sessionStorage.getItem("ebb-pending-email") ||
@@ -954,11 +1107,25 @@ function initEmailVerification() {
           return;
         }
 
-        if (UserManager.verifyCode(email, code)) {
-          showToast("✅ Email verified successfully!", "success");
+        const verified = await UserManager.verifyCode(email, code);
+        if (verified) {
+          // ✅ MARK EMAIL AS VERIFIED
+          const verifiedEmails = JSON.parse(
+            sessionStorage.getItem("ebb-verified-emails") || "[]",
+          );
+          if (!verifiedEmails.includes(email)) {
+            verifiedEmails.push(email);
+            sessionStorage.setItem(
+              "ebb-verified-emails",
+              JSON.stringify(verifiedEmails),
+            );
+          }
+
           sessionStorage.removeItem("ebb-pending-email");
           verificationContainer.classList.add("hidden");
-          // Continue to next step in form
+
+          // ✅ ENABLE submit button and move to next step
+          if (submitBtn) submitBtn.disabled = false;
           const nextBtn = form?.querySelector(".step-next");
           nextBtn?.click();
         }
@@ -967,33 +1134,27 @@ function initEmailVerification() {
 
     // Resend button
     if (resendBtn) {
-      resendBtn.addEventListener("click", () => {
+      resendBtn.addEventListener("click", async () => {
         const email =
           sessionStorage.getItem("ebb-pending-email") ||
           emailInput.value.trim();
         if (email) {
-          UserManager.sendVerificationCode(email);
+          const firstName =
+            form.querySelector('[name="first_name"]')?.value.trim() || "";
+          const lastName =
+            form.querySelector('[name="last_name"]')?.value.trim() || "";
+          await UserManager.sendVerificationCode(email, firstName, lastName);
+          codeInput?.focus();
         }
       });
     }
-
-    // Trigger verification on email blur if needed
-    emailInput.addEventListener("blur", () => {
-      if (
-        emailInput.value.trim() &&
-        !verificationContainer.classList.contains("hidden")
-      ) {
-        // Already showing verification, don't do anything
-        return;
-      }
-    });
   });
 }
 
 /* ══════════════════════════════════════════════════════════
    17B. LOGIN EMAIL VERIFICATION
 ══════════════════════════════════════════════════════════ */
-function initLoginVerification() {
+async function initLoginVerification() {
   const params = new URLSearchParams(window.location.search);
   const email = params.get("verify");
 
@@ -1002,22 +1163,22 @@ function initLoginVerification() {
     const modal = document.getElementById("login-verification-modal");
     if (modal) {
       modal.classList.remove("hidden");
-      UserManager.sendVerificationCode(email);
+      await UserManager.sendVerificationCode(email);
       sessionStorage.setItem("ebb-pending-login-verify", email);
 
       const verifyBtn = document.getElementById("login-verify-btn");
       const codeInput = document.getElementById("login-verification-code");
 
       if (verifyBtn) {
-        verifyBtn.addEventListener("click", () => {
+        verifyBtn.addEventListener("click", async () => {
           const code = codeInput?.value.trim();
-          if (UserManager.verifyCode(email, code)) {
+          const verified = await UserManager.verifyCode(email, code);
+          if (verified) {
             modal.classList.add("hidden");
             sessionStorage.removeItem("ebb-pending-login-verify");
             // Continue with login
             const loginForm = document.getElementById("login-form");
             if (loginForm) {
-              // Form should now proceed normally
               showToast("Email verified! You can now sign in.", "success");
             }
           }
@@ -1025,6 +1186,95 @@ function initLoginVerification() {
       }
     }
   }
+}
+
+function initForgotPassword() {
+  const forgotLink = document.getElementById("forgot-password-link");
+  const forgotModal = document.getElementById("forgot-password-modal");
+  const forgotCloseBtn = document.getElementById("forgot-close-btn");
+  const forgotSendBtn = document.getElementById("forgot-send-btn");
+  const forgotResetBtn = document.getElementById("forgot-reset-btn");
+  const forgotResetStep = document.getElementById("forgot-reset-step");
+  const forgotEmail = document.getElementById("forgot-email");
+  const forgotCode = document.getElementById("forgot-code");
+  const forgotNewPassword = document.getElementById("forgot-new-password");
+  const forgotConfirmPassword = document.getElementById(
+    "forgot-confirm-password",
+  );
+
+  if (!forgotLink || !forgotModal) return;
+
+  const closeModal = () => {
+    forgotModal.classList.add("hidden");
+    forgotResetStep?.classList.add("hidden");
+    if (forgotEmail) forgotEmail.value = "";
+    if (forgotCode) forgotCode.value = "";
+    if (forgotNewPassword) forgotNewPassword.value = "";
+    if (forgotConfirmPassword) forgotConfirmPassword.value = "";
+  };
+
+  forgotLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    forgotModal.classList.remove("hidden");
+    forgotResetStep?.classList.add("hidden");
+  });
+
+  forgotCloseBtn?.addEventListener("click", () => {
+    closeModal();
+  });
+
+  forgotModal.addEventListener("click", (event) => {
+    if (event.target === forgotModal) {
+      closeModal();
+    }
+  });
+
+  forgotSendBtn?.addEventListener("click", async () => {
+    const email = forgotEmail?.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast("Please enter a valid email address.", "warning");
+      return;
+    }
+
+    const sent = await UserManager.sendPasswordResetCode(email);
+    if (sent) {
+      forgotResetStep?.classList.remove("hidden");
+      forgotCode?.focus();
+    }
+  });
+
+  forgotResetBtn?.addEventListener("click", async () => {
+    const email = forgotEmail?.value.trim();
+    const code = forgotCode?.value.trim();
+    const newPassword = forgotNewPassword?.value.trim();
+    const confirmPassword = forgotConfirmPassword?.value.trim();
+
+    if (!code || code.length !== 6) {
+      showToast("Please enter the 6-digit reset code.", "error");
+      return;
+    }
+
+    if (!newPassword || newPassword.length < 6) {
+      showToast("New password must be at least 6 characters.", "warning");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showToast(
+        "Passwords do not match. Please confirm your new password.",
+        "error",
+      );
+      return;
+    }
+
+    const success = await UserManager.resetPassword(email, code, newPassword);
+    if (success) {
+      closeModal();
+      if (!window.location.pathname.endsWith("login.html")) {
+        window.location.href = "login.html";
+      }
+    }
+  });
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1077,6 +1327,71 @@ function initDashboardUser() {
   if (navbarAvatar) {
     navbarAvatar.setAttribute("title", `${user.fullName} — ${user.role}`);
     navbarAvatar.setAttribute(
+      "data-tooltip",
+      `${user.fullName} — ${user.role}`,
+    );
+  }
+
+  // Fill dashboard profile summary
+  const dashboardName = document.getElementById("dashboard-profile-name");
+  const dashboardSummary = document.getElementById("dashboard-profile-summary");
+  const dashboardStatus = document.getElementById("dashboard-profile-status");
+  const dashboardBloodType = document.getElementById(
+    "dashboard-profile-blood-type",
+  );
+  const dashboardCity = document.getElementById("dashboard-profile-city");
+  const dashboardPhone = document.getElementById("dashboard-profile-phone");
+  const dashboardMemberSince = document.getElementById(
+    "dashboard-profile-member-since",
+  );
+  const dashboardAvatar = document.getElementById("dashboard-profile-avatar");
+
+  const bloodType = user.bloodType || user.blood_type || "N/A";
+  const city = user.city || user.address || "Unknown city";
+  const phone = user.phone || "Not provided";
+  const roleText = user.role === "donor" ? "Blood Donor" : "Blood Requester";
+  const createdAt = user.createdAt ? new Date(user.createdAt) : null;
+  const memberSince = createdAt
+    ? createdAt.toLocaleString("default", {
+        month: "short",
+        year: "numeric",
+      })
+    : "N/A";
+
+  if (dashboardName) {
+    dashboardName.textContent = user.fullName || user.email;
+  }
+
+  if (dashboardSummary) {
+    dashboardSummary.textContent = `${roleText} · Member since ${memberSince}`;
+  }
+
+  if (dashboardStatus) {
+    dashboardStatus.textContent =
+      user.role === "donor"
+        ? "🟢 Available to Donate"
+        : "🟠 Waiting for Requests";
+  }
+
+  if (dashboardBloodType) {
+    dashboardBloodType.textContent = bloodType;
+  }
+
+  if (dashboardCity) {
+    dashboardCity.textContent = city;
+  }
+
+  if (dashboardPhone) {
+    dashboardPhone.textContent = phone;
+  }
+
+  if (dashboardMemberSince) {
+    dashboardMemberSince.textContent = memberSince;
+  }
+
+  if (dashboardAvatar) {
+    dashboardAvatar.textContent = initials;
+    dashboardAvatar.setAttribute(
       "data-tooltip",
       `${user.fullName} — ${user.role}`,
     );
@@ -1160,6 +1475,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initEmailVerification();
   initLoginVerification();
+  initForgotPassword();
   initDashboardUser();
 
   // Form validation bindings (by page)

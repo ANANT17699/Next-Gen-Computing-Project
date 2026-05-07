@@ -254,10 +254,10 @@
             </div>
 
             <!-- Email Verification Section -->
-            <div id="email-verification-section" class="form-group hidden" style="grid-column:1/-1; background:var(--color-surface-variant); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+            <div id="email-verification-section" class="form-group" style="grid-column:1/-1; background:var(--color-surface-variant); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--color-border);">
               <label class="form-label">✉️ Verify Your Email</label>
               <p style="font-size:0.85rem; color:var(--color-text-secondary); margin-bottom:0.75rem;">
-                We sent a 6-digit verification code to your email. Enter it below to verify your account.
+                After entering your email above, a 6-digit verification code will be sent. Enter it here to verify your account. 🔐
               </p>
               <div class="input-group" style="margin-bottom:0.75rem;">
                 <span class="input-icon">🔐</span>
@@ -273,7 +273,7 @@
                   Resend Code
                 </button>
               </div>
-              <button type="button" id="send-verification-code-btn" class="btn btn-outline" style="display:none;">
+              <button type="button" id="send-verification-code-btn" class="btn btn-outline" style="display:block; width:100%; margin-top:0.75rem;">
                 Send Code
               </button>
             </div>
@@ -365,8 +365,8 @@
 
           <div class="flex gap-2" style="justify-content:space-between; margin-top:1.75rem;">
             <button type="button" class="btn btn-ghost step-prev">← Edit Information</button>
-            <button type="submit" class="btn btn-primary btn-lg">
-              🩸 Submit Registration
+            <button type="submit" class="btn btn-primary btn-lg" disabled style="opacity:0.6; cursor:not-allowed;" title="Please verify your email first">
+              🩸 Submit Registration (Verify Email First)
             </button>
           </div>
 

@@ -48,6 +48,7 @@ transporter.verify((error, success) => {
 // (Replace with MongoDB in production)
 // ══════════════════════════════════════════════════════════
 const verificationCodes = {};
+const resetCodes = {};
 const users = [];
 
 // ══════════════════════════════════════════════════════════
@@ -158,7 +159,86 @@ async function sendVerificationEmail(email, code, userName = "User") {
     return false;
   }
 }
+// Send password reset email
+async function sendPasswordResetEmail(email, code, userName = "User") {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM || "noreply@ebloodbank.com",
+    to: email,
+    subject: "🩸 E-Blood Bank - Password Reset Code",
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+          }
 
+          .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+          }
+
+          .title {
+            color: #d32f2f;
+            text-align: center;
+          }
+
+          .code-box {
+            text-align: center;
+            margin: 30px 0;
+          }
+
+          .code {
+            font-size: 36px;
+            font-weight: bold;
+            color: #d32f2f;
+            letter-spacing: 5px;
+          }
+
+          .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: gray;
+            text-align: center;
+          }
+        </style>
+      </head>
+
+      <body>
+        <div class="container">
+          <h1 class="title">🩸 E-Blood Bank</h1>
+          <p>Hello ${userName},</p>
+          <p>Your password reset code is:</p>
+          <div class="code-box">
+            <div class="code">${code}</div>
+          </div>
+          <p>This code will expire in 10 minutes.</p>
+          <p>If you did not request a password reset, please ignore this email.</p>
+          <div class="footer">© 2026 E-Blood Bank</div>
+        </div>
+      </body>
+      </html>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✅ Password reset email sent to ${email}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(`📧 Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    }
+    return true;
+  } catch (error) {
+    console.error("❌ Error sending password reset email:", error);
+    return false;
+  }
+}
 // ══════════════════════════════════════════════════════════
 // API ROUTES
 // ══════════════════════════════════════════════════════════
@@ -290,6 +370,113 @@ app.post("/api/verify-code", (req, res) => {
   } catch (error) {
     console.error("Verification error:", error);
 
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+// Send password reset code
+app.post("/api/send-password-reset-code", async (req, res) => {
+  try {
+    const { email, firstName, lastName } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const code = generateVerificationCode();
+    resetCodes[email] = {
+      code,
+      timestamp: Date.now(),
+      attempts: 0,
+    };
+
+    const userName = firstName
+      ? `${firstName} ${lastName || ""}`.trim()
+      : "User";
+
+    const emailSent = await sendPasswordResetEmail(email, code, userName);
+
+    if (!emailSent) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send password reset email",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Password reset code sent successfully",
+      expiresIn: "10 minutes",
+    });
+  } catch (error) {
+    console.error("Send password reset code error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+// Reset password using code
+app.post("/api/reset-password", (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, code and new password are required",
+      });
+    }
+
+    const reset = resetCodes[email];
+    if (!reset) {
+      return res.status(400).json({
+        success: false,
+        message: "No password reset request found",
+      });
+    }
+
+    const tenMinutes = 10 * 60 * 1000;
+    if (Date.now() - reset.timestamp > tenMinutes) {
+      delete resetCodes[email];
+      return res.status(400).json({
+        success: false,
+        message: "Reset code expired",
+      });
+    }
+
+    if (reset.attempts >= 3) {
+      delete resetCodes[email];
+      return res.status(400).json({
+        success: false,
+        message: "Too many failed attempts",
+      });
+    }
+
+    if (reset.code !== code) {
+      reset.attempts += 1;
+      return res.status(400).json({
+        success: false,
+        message: `Invalid reset code. ${3 - reset.attempts} attempts remaining.`,
+      });
+    }
+
+    delete resetCodes[email];
+
+    res.json({
+      success: true,
+      message: "Password reset code verified successfully",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",

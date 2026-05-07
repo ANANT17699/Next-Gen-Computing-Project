@@ -120,7 +120,7 @@
             <input type="checkbox" name="remember" />
             <span class="form-check-label">Remember me</span>
           </label>
-          <a href="#" style="font-size:0.85rem; color:var(--color-primary); font-weight:500;">
+          <a href="#" id="forgot-password-link" style="font-size:0.85rem; color:var(--color-primary); font-weight:500;">
             Forgot password?
           </a>
         </div>
@@ -179,6 +179,66 @@
           <p style="text-align:center; margin:1rem 0 0 0; font-size:0.8rem; color:var(--color-text-muted);">
             Didn't receive it? Check spam folder or <a href="#" onclick="showToast('Contact support for help', 'info'); return false;" style="color:var(--color-primary);">contact support</a>.
           </p>
+        </div>
+      </div>
+
+      <!-- Forgot Password Modal -->
+      <div id="forgot-password-modal" class="hidden" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000;">
+        <div style="background:var(--color-surface); padding:2rem; border-radius:var(--radius-lg); max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:slideUp 0.3s ease;">
+          <h2 style="margin:0 0 0.5rem 0; font-size:1.5rem; color:var(--color-text-primary);">Reset your password</h2>
+          <p style="margin:0 0 1rem 0; color:var(--color-text-secondary); font-size:0.92rem;">
+            Enter your registered email to receive a reset code, then set a new password.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label" for="forgot-email">Registered Email</label>
+            <div class="input-group">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="forgot-email" class="form-control" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <span class="form-error"></span>
+          </div>
+
+          <button type="button" id="forgot-send-btn" class="btn btn-primary btn-block" style="margin-bottom:1rem;">
+            Send Reset Code
+          </button>
+
+          <div id="forgot-reset-step" class="hidden" style="margin-top:1rem;">
+            <div class="form-group">
+              <label class="form-label" for="forgot-code">Reset Code</label>
+              <div class="input-group">
+                <span class="input-icon">🔐</span>
+                <input type="text" id="forgot-code" class="form-control" placeholder="000000" maxlength="6" inputmode="numeric" style="letter-spacing:0.2em; text-align:center;" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="forgot-new-password">New Password</label>
+              <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="forgot-new-password" class="form-control" placeholder="New password" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="forgot-confirm-password">Confirm Password</label>
+              <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="forgot-confirm-password" class="form-control" placeholder="Confirm new password" />
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <button type="button" id="forgot-reset-btn" class="btn btn-primary btn-block">
+              Reset Password
+            </button>
+          </div>
+
+          <button type="button" id="forgot-close-btn" class="btn btn-ghost btn-block" style="margin-top:1rem;">
+            Cancel
+          </button>
         </div>
       </div>
 
